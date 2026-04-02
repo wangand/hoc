@@ -1,7 +1,10 @@
 %{
 #include <stdio.h>
+#include <setjmp.h>
 int yylex(void);
 int yyerror(char* s);
+void execerror(char* s, char*t);
+jmp_buf begin;
 double mem[26];
 %}
 %union {
@@ -25,7 +28,10 @@ expr: NUMBER { $$ = $1; }
  | expr '+' expr {  $$ = $1 + $3; }
  | expr '-' expr {  $$ = $1 - $3; }
  | expr '*' expr {  $$ = $1 * $3; }
- | expr '/' expr {  $$ = $1 / $3; }
+ | expr '/' expr {
+    if($3==0.0){ execerror("division by zero",""); }
+    $$ = $1 / $3; 
+   }
  | '(' expr ')' { $$ = $2; }
  | '-' expr %prec UNARYMINUS { $$ = -$2; }
 %%
@@ -37,6 +43,7 @@ int lineno = 1;
 
 int main(int argc, char *argv[]) {
  progname = argv[0];
+ setjmp(begin);
  yyparse();
 }
 
@@ -45,3 +52,7 @@ int yyerror(char* s){
  return 0;
 }
 
+void execerror(char* s, char* t){
+ printf("%s %s\n", s, t);
+ longjmp(begin,0);
+}

@@ -83,8 +83,11 @@
 #line 1 "hoc.y"
 
 #include <stdio.h>
+#include <setjmp.h>
 int yylex(void);
 int yyerror(char* s);
+void execerror(char* s, char*t);
+jmp_buf begin;
 double mem[26];
 
 
@@ -108,13 +111,13 @@ double mem[26];
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 7 "hoc.y"
+#line 10 "hoc.y"
 {
  double val;
  int index;
 }
 /* Line 193 of yacc.c.  */
-#line 118 "hoc.tab.c"
+#line 121 "hoc.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -127,7 +130,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 131 "hoc.tab.c"
+#line 134 "hoc.tab.c"
 
 #ifdef short
 # undef short
@@ -414,8 +417,8 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    18,    18,    19,    20,    22,    23,    24,    25,    26,
-      27,    28,    29,    30
+       0,    21,    21,    22,    23,    25,    26,    27,    28,    29,
+      30,    31,    35,    36
 };
 #endif
 
@@ -1330,58 +1333,61 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 20 "hoc.y"
+#line 23 "hoc.y"
     { printf("\t%.8g\n", (yyvsp[(2) - (3)].val)); ;}
     break;
 
   case 5:
-#line 22 "hoc.y"
+#line 25 "hoc.y"
     { (yyval.val) = (yyvsp[(1) - (1)].val); ;}
     break;
 
   case 6:
-#line 23 "hoc.y"
+#line 26 "hoc.y"
     { (yyval.val) = mem[(yyvsp[(1) - (1)].index)]; ;}
     break;
 
   case 7:
-#line 24 "hoc.y"
+#line 27 "hoc.y"
     { (yyval.val) = mem[(yyvsp[(1) - (3)].index)] = (yyvsp[(3) - (3)].val); ;}
     break;
 
   case 8:
-#line 25 "hoc.y"
+#line 28 "hoc.y"
     {  (yyval.val) = (yyvsp[(1) - (3)].val) + (yyvsp[(3) - (3)].val); ;}
     break;
 
   case 9:
-#line 26 "hoc.y"
+#line 29 "hoc.y"
     {  (yyval.val) = (yyvsp[(1) - (3)].val) - (yyvsp[(3) - (3)].val); ;}
     break;
 
   case 10:
-#line 27 "hoc.y"
+#line 30 "hoc.y"
     {  (yyval.val) = (yyvsp[(1) - (3)].val) * (yyvsp[(3) - (3)].val); ;}
     break;
 
   case 11:
-#line 28 "hoc.y"
-    {  (yyval.val) = (yyvsp[(1) - (3)].val) / (yyvsp[(3) - (3)].val); ;}
+#line 31 "hoc.y"
+    {
+    if((yyvsp[(3) - (3)].val)==0.0){ execerror("division by zero",""); }
+    (yyval.val) = (yyvsp[(1) - (3)].val) / (yyvsp[(3) - (3)].val); 
+   ;}
     break;
 
   case 12:
-#line 29 "hoc.y"
+#line 35 "hoc.y"
     { (yyval.val) = (yyvsp[(2) - (3)].val); ;}
     break;
 
   case 13:
-#line 30 "hoc.y"
+#line 36 "hoc.y"
     { (yyval.val) = -(yyvsp[(2) - (2)].val); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1385 "hoc.tab.c"
+#line 1391 "hoc.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1595,7 +1601,7 @@ yyreturn:
 }
 
 
-#line 31 "hoc.y"
+#line 37 "hoc.y"
 
 /* end of grammar */
 #include <stdio.h>
@@ -1605,6 +1611,7 @@ int lineno = 1;
 
 int main(int argc, char *argv[]) {
  progname = argv[0];
+ setjmp(begin);
  yyparse();
 }
 
@@ -1613,4 +1620,8 @@ int yyerror(char* s){
  return 0;
 }
 
+void execerror(char* s, char* t){
+ printf("%s %s\n", s, t);
+ longjmp(begin,0);
+}
 
