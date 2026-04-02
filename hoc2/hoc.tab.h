@@ -54,7 +54,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 10 "hoc.y"
+#line 12 "hoc.y"
 {
  double val;
  int index;
