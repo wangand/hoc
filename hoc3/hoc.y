@@ -56,11 +56,6 @@ int yyerror(char* s){
  return 0;
 }
 
-void execerror(char* s, char* t){
- printf("%s %s\n", s, t);
- longjmp(begin,0);
-}
-
 void fpecatch(int n){
  execerror("floating point exception", (char *) 0);
 }

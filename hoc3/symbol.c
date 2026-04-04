@@ -1,8 +1,9 @@
 #include <stdlib.h>
+#include <string.h>
 #include "hoc.h"
 #include "hoc.tab.h"
 
-static Symbol *symlist = ; /*symbol table: linked list*/
+static Symbol *symlist; /*symbol table: linked list*/
 char *emalloc(unsigned n);
 
 Symbol *lookup(char *s){

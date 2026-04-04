@@ -8,3 +8,5 @@ typedef struct Symbol { /* symbol table entry */
  struct Symbol *next;
 } Symbol;
 Symbol *install(char *s, int t, double d), *lookup(char *s);
+
+extern void execerror(char* s, char*t);
