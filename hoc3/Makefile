@@ -18,6 +18,10 @@ hoc.tab.c: hoc.y
 
 symbol.o: symbol.c hoc.tab.h
 	gcc -c symbol.c -o symbol.o
+math.o: math.c
+	gcc -c math.c -o math.o
+init.o: init.c
+	gcc -c init.c -o init.o
 
 
 
@@ -27,4 +31,11 @@ test_symbol: test_symbol.o execerror.o symbol.o
 	gcc test_symbol.o symbol.o execerror.o -o test_symbol
 run_test_symbol: test_symbol
 	./test_symbol
+
+test_init.o: test_init.c
+	gcc -c test_init.c -o test_init.o
+test_init: test_init.o init.o math.o execerror.o symbol.o
+	gcc test_init.o init.o math.o execerror.o symbol.o -o test_init
+run_test_init: test_init
+	./test_init
 

@@ -1,6 +1,7 @@
 #include <math.h>
 #include <errno.h>
 
+extern void execerror(char* s, char*t);
 extern int errno;
 double errcheck(double d, char *s);
 

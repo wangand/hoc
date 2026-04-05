@@ -14,7 +14,7 @@ double mem[26];
  int index;
 }
 %token <val> NUMBER
-%token <index> VAR
+%token <index> VAR BLTIN
 %type <val> expr
 %left '+' '-' 
 %left '*' '/'

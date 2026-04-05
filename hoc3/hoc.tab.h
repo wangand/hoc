@@ -41,13 +41,15 @@
    enum yytokentype {
      NUMBER = 258,
      VAR = 259,
-     UNARYMINUS = 260
+     BLTIN = 260,
+     UNARYMINUS = 261
    };
 #endif
 /* Tokens.  */
 #define NUMBER 258
 #define VAR 259
-#define UNARYMINUS 260
+#define BLTIN 260
+#define UNARYMINUS 261
 
 
 
@@ -60,7 +62,7 @@ typedef union YYSTYPE
  int index;
 }
 /* Line 1529 of yacc.c.  */
-#line 64 "hoc.tab.h"
+#line 66 "hoc.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
