@@ -15,6 +15,12 @@ int main(void){
  jmptest = 1;
  
  install("PI", VAR, 3.141592);
+ 
+Symbol *sp;
+ sp = lookup("PI");
+ if(sp==0) printf("PI not found\n");
+ else printf("%s\n",sp->name);
+
 
  printf("testing symbol\n");
 }
