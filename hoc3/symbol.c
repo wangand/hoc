@@ -13,8 +13,8 @@ Symbol *lookup(char *s){
   if(strcmp(sp->name,s)==0){
    return sp;
   }
-  return 0;
  }
+ return 0;
 }
 
 Symbol *install(char *s, int t, double d){
