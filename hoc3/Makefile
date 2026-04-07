@@ -1,8 +1,8 @@
 run: hoc
 	./hoc
 
-hoc: hoc.tab.o lexer.o execerror.o
-	gcc hoc.tab.o lexer.o execerror.o -o hoc
+hoc: hoc.tab.o lexer.o execerror.o symbol.o init.o math.o
+	gcc hoc.tab.o lexer.o execerror.o symbol.o init.o math.o -o hoc
 
 lexer.o: lexer.c
 	gcc -c lexer.c -o lexer.o
@@ -38,4 +38,11 @@ test_init: test_init.o init.o math.o execerror.o symbol.o
 	gcc test_init.o init.o math.o execerror.o symbol.o -o test_init
 run_test_init: test_init
 	./test_init
+
+test_lexer.o: test_lexer.c
+	gcc -c test_lexer.c -o test_lexer.o
+test_lexer: test_lexer.o lexer.o
+	gcc test_lexer.o lexer.o -o test_lexer
+run_test_lexer: test_lexer
+	./test_lexer
 
