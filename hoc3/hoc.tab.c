@@ -1640,9 +1640,11 @@ yyreturn:
 #include <ctype.h>
 char *progname ; /* for error messages */
 int lineno = 1;
+extern void init();
 
 int main(int argc, char *argv[]) {
  progname = argv[0];
+ init();
  setjmp(begin);
  signal(SIGFPE, fpecatch);
  yyparse();
