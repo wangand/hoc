@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include "hoc.tab.h"
+#include "hoc.h"
 extern int lineno;
 
 int yylex(){
@@ -16,10 +17,22 @@ int yylex(){
  scanf("%lf", &yylval.val);
  return NUMBER;
  }
- if(islower(c)) {
-  yylval.index = c - 'a';
-  return VAR;
+
+if(isalpha(c)){
+ struct Symbol *s;
+ char sbuf[100], *p = sbuf;
+ do{
+   *p++ = c;
+ }while((c=getchar()) != EOF && isalnum(c) );
+ ungetc(c, stdin);
+ *p = '\0';
+ if((s=lookup(sbuf)) == 0){
+  s = install(sbuf, UNDEF, 0.0);
  }
+ yylval.sym = s;
+ return s->type == UNDEF ? VAR : s->type;
+}
+
  if (c=='\n'){
   lineno++;
  }

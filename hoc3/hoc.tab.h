@@ -42,27 +42,29 @@
      NUMBER = 258,
      VAR = 259,
      BLTIN = 260,
-     UNARYMINUS = 261
+     UNDEF = 261,
+     UNARYMINUS = 262
    };
 #endif
 /* Tokens.  */
 #define NUMBER 258
 #define VAR 259
 #define BLTIN 260
-#define UNARYMINUS 261
+#define UNDEF 261
+#define UNARYMINUS 262
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 12 "hoc.y"
+#line 14 "hoc.y"
 {
  double val;
- int index;
+ struct Symbol *sym;
 }
 /* Line 1529 of yacc.c.  */
-#line 66 "hoc.tab.h"
+#line 68 "hoc.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
