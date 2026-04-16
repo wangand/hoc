@@ -5,6 +5,9 @@
 
 jmp_buf begin;
 extern void init();
+extern void initcode();
+extern void execute(Inst *p);
+
 
 int main(){
  init();
@@ -16,4 +19,7 @@ int main(){
  jmptest = 1;
 
  printf("testing code\n");
+ 
+ initcode();
+ execute(prog);
 }

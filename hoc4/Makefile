@@ -49,8 +49,8 @@ run_test_lexer: test_lexer
 
 test_code.o: test_code.c
 	gcc -c test_code.c -o test_code.o
-test_code: test_code.o init.o math.o execerror.o symbol.o
-	gcc test_code.o init.o math.o execerror.o symbol.o -o test_code
+test_code: test_code.o init.o math.o execerror.o symbol.o code.o
+	gcc test_code.o init.o math.o execerror.o symbol.o code.o -o test_code
 run_test_code: test_code
 	./test_code
 
