@@ -13,9 +13,11 @@ int yylex(){
   return 0;
  }
  if (c == '.' || isdigit(c)){
- ungetc(c,stdin);
- scanf("%lf", &yylval.val);
- return NUMBER;
+  double d;
+  ungetc(c,stdin);
+  scanf("%lf", &d);
+  yylval.sym = install("", NUMBER, d);
+  return NUMBER;
  }
 
 if(isalpha(c)){
