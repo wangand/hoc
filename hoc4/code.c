@@ -42,6 +42,8 @@ Inst *code(Inst f){
 void execute(Inst *p){
  for(pc=p; *pc != STOP; ){
   (*(*pc++))();
+  /* same effect: */
+  /* (*pc++)(); */
  }
 }
 

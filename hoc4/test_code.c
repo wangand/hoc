@@ -7,7 +7,16 @@ jmp_buf begin;
 extern void init();
 extern void initcode();
 extern void execute(Inst *p);
+extern Inst *code(Inst f);
+extern Inst *pc;
+extern void push(Datum d);
 
+void printprog(){
+ for(Inst *p=prog; *p != STOP; p++){
+  printf("%p\n", *p);
+ }
+ printf("STOP\n");
+}
 
 int main(){
  init();
@@ -19,7 +28,18 @@ int main(){
  jmptest = 1;
 
  printf("testing code\n");
+ printf("print: %p\n", print);
  
  initcode();
+
+ struct Symbol *s = install("", NUMBER, 42);
+
+ code(constpush);
+ code((Inst) s);
+ code(print);
+ code(STOP);
+ 
+ printprog();
+
  execute(prog);
 }
