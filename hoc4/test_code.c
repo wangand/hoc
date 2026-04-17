@@ -36,6 +36,7 @@ int main(){
 
  code(constpush);
  code((Inst) s);
+ code(negate);
  code(print);
  code(STOP);
  

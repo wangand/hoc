@@ -94,6 +94,14 @@ int assign(){
  return 1;
 }
 
+int negate(){
+ Datum d;
+ d = pop();
+ d.val = -d.val;
+ push(d);
+ return 1;
+}
+
 int print(){
  Datum d;
  d = pop();
