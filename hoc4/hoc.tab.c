@@ -97,6 +97,10 @@ void execerror(char* s, char*t);
 void fpecatch(int n);
 jmp_buf begin;
 extern double Pow(double x, double y);
+extern Inst *code(Inst f);
+
+#define code2(c1,c2) code(c1); code(c2)
+#define code3(c1,c2,c3) code(c1);code(c2);code(c3);
 
 
 /* Enabling traces.  */
@@ -119,13 +123,13 @@ extern double Pow(double x, double y);
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 14 "hoc.y"
+#line 18 "hoc.y"
 {
- double val;
  struct Symbol *sym;
+ Inst *inst;
 }
 /* Line 193 of yacc.c.  */
-#line 129 "hoc.tab.c"
+#line 133 "hoc.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -138,7 +142,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 142 "hoc.tab.c"
+#line 146 "hoc.tab.c"
 
 #ifdef short
 # undef short
@@ -418,17 +422,17 @@ static const yytype_int8 yyrhs[] =
       18,     0,    -1,    -1,    18,    14,    -1,    18,    19,    14,
       -1,    18,    20,    14,    -1,    18,     1,    14,    -1,     4,
        7,    20,    -1,     3,    -1,     4,    -1,    19,    -1,     5,
-      15,    20,    16,    -1,    20,     8,    20,    -1,    20,     9,
-      20,    -1,    20,    10,    20,    -1,    20,    11,    20,    -1,
-      20,    13,    20,    -1,    15,    20,    16,    -1,     9,    20,
+      15,    20,    16,    -1,    15,    20,    16,    -1,    20,     8,
+      20,    -1,    20,     9,    20,    -1,    20,    10,    20,    -1,
+      20,    11,    20,    -1,    20,    13,    20,    -1,     9,    20,
       -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    27,    27,    28,    29,    30,    31,    33,    35,    36,
-      42,    43,    44,    45,    46,    47,    51,    52,    53
+       0,    30,    30,    31,    32,    33,    34,    36,    38,    39,
+      40,    41,    42,    43,    44,    45,    46,    47,    48
 };
 #endif
 
@@ -474,8 +478,8 @@ static const yytype_uint8 yydefact[] =
 {
        2,     0,     1,     0,     8,     9,     0,     0,     3,     0,
       10,     0,     6,     0,     0,    10,    18,     0,     4,     0,
-       0,     0,     0,     0,     5,     7,     0,    17,    12,    13,
-      14,    15,    16,    11
+       0,     0,     0,     0,     5,     7,     0,    12,    13,    14,
+      15,    16,    17,    11
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
@@ -1349,77 +1353,74 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 5:
-#line 30 "hoc.y"
-    { printf("\t%.8g\n", (yyvsp[(2) - (3)].val)); ;}
+        case 4:
+#line 32 "hoc.y"
+    { code2(popstack, STOP); return 1; ;}
+    break;
+
+  case 5:
+#line 33 "hoc.y"
+    { code2(print, STOP); return 1; ;}
     break;
 
   case 6:
-#line 31 "hoc.y"
+#line 34 "hoc.y"
     { yyerrok; ;}
     break;
 
   case 7:
-#line 33 "hoc.y"
-    { (yyval.val)=(yyvsp[(1) - (3)].sym)->u.val=(yyvsp[(3) - (3)].val); (yyvsp[(1) - (3)].sym)->type=VAR; ;}
+#line 36 "hoc.y"
+    { code3(varpush,(Inst)(yyvsp[(1) - (3)].sym),assign); ;}
+    break;
+
+  case 8:
+#line 38 "hoc.y"
+    { code2(constpush, (Inst)(yyvsp[(1) - (1)].sym)); ;}
     break;
 
   case 9:
-#line 36 "hoc.y"
-    {
- if((yyvsp[(1) - (1)].sym)->type == UNDEF){
-  execerror("undefined variable", (yyvsp[(1) - (1)].sym)->name);
- }
- (yyval.val) = (yyvsp[(1) - (1)].sym)->u.val;
-;}
+#line 39 "hoc.y"
+    { code3(varpush,(Inst)(yyvsp[(1) - (1)].sym), eval); ;}
     break;
 
   case 11:
-#line 43 "hoc.y"
-    { (yyval.val) = ((double (*)(double))(*((yyvsp[(1) - (4)].sym)->u.ptr)))((yyvsp[(3) - (4)].val)); ;}
-    break;
-
-  case 12:
-#line 44 "hoc.y"
-    {  (yyval.val) = (yyvsp[(1) - (3)].val) + (yyvsp[(3) - (3)].val); ;}
+#line 41 "hoc.y"
+    { code2(bltin, (Inst)(yyvsp[(1) - (4)].sym)->u.ptr); ;}
     break;
 
   case 13:
-#line 45 "hoc.y"
-    {  (yyval.val) = (yyvsp[(1) - (3)].val) - (yyvsp[(3) - (3)].val); ;}
+#line 43 "hoc.y"
+    { code(add); ;}
     break;
 
   case 14:
-#line 46 "hoc.y"
-    {  (yyval.val) = (yyvsp[(1) - (3)].val) * (yyvsp[(3) - (3)].val); ;}
+#line 44 "hoc.y"
+    { code(sub); ;}
     break;
 
   case 15:
-#line 47 "hoc.y"
-    {
-    if((yyvsp[(3) - (3)].val)==0.0){ execerror("division by zero",""); }
-    (yyval.val) = (yyvsp[(1) - (3)].val) / (yyvsp[(3) - (3)].val); 
-   ;}
+#line 45 "hoc.y"
+    { code(mul); ;}
     break;
 
   case 16:
-#line 51 "hoc.y"
-    { (yyval.val) = Pow((yyvsp[(1) - (3)].val), (yyvsp[(3) - (3)].val)); ;}
+#line 46 "hoc.y"
+    { code(hocdiv); ;}
     break;
 
   case 17:
-#line 52 "hoc.y"
-    { (yyval.val) = (yyvsp[(2) - (3)].val); ;}
+#line 47 "hoc.y"
+    { code(power); ;}
     break;
 
   case 18:
-#line 53 "hoc.y"
-    { (yyval.val) = -(yyvsp[(2) - (2)].val); ;}
+#line 48 "hoc.y"
+    { code(negate); ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1423 "hoc.tab.c"
+#line 1424 "hoc.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1633,7 +1634,7 @@ yyreturn:
 }
 
 
-#line 55 "hoc.y"
+#line 50 "hoc.y"
 
 /* end of grammar */
 #include <stdio.h>
@@ -1641,13 +1642,18 @@ yyreturn:
 char *progname ; /* for error messages */
 int lineno = 1;
 extern void init();
+extern void initcode();
+extern void execute(Inst *p);
 
 int main(int argc, char *argv[]) {
  progname = argv[0];
  init();
  setjmp(begin);
  signal(SIGFPE, fpecatch);
- yyparse();
+ for(initcode(); yyparse(); initcode()){
+  execute(prog);
+ }
+ return 0;
 }
 
 int yyerror(char* s){

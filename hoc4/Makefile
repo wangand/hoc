@@ -1,8 +1,8 @@
 run: hoc
 	./hoc
 
-hoc: hoc.tab.o lexer.o execerror.o symbol.o init.o math.o
-	gcc hoc.tab.o lexer.o execerror.o symbol.o init.o math.o -o hoc
+hoc: hoc.tab.o lexer.o execerror.o symbol.o init.o math.o code.o
+	gcc hoc.tab.o lexer.o execerror.o symbol.o init.o math.o code.o -o hoc
 
 lexer.o: lexer.c hoc.tab.o
 	gcc -c lexer.c -o lexer.o

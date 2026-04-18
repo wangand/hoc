@@ -58,10 +58,10 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 14 "hoc.y"
+#line 18 "hoc.y"
 {
- double val;
  struct Symbol *sym;
+ Inst *inst;
 }
 /* Line 1529 of yacc.c.  */
 #line 68 "hoc.tab.h"

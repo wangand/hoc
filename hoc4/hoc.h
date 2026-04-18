@@ -21,5 +21,6 @@ typedef int (*Inst)();
 #define STOP (Inst) 0
 
 extern Inst prog[];
-extern int eval(), add(), sub(), mul(), div(), negate(), power();
+extern int eval(), add(), sub(), mul(), hocdiv(), negate(), power();
 extern int assign(), bltin(), varpush(), constpush(), negate(), print();
+extern int popstack();

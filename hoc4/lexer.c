@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
-#include "hoc.tab.h"
 #include "hoc.h"
+#include "hoc.tab.h"
 extern int lineno;
 
 int yylex(){
