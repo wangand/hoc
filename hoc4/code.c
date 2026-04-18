@@ -147,6 +147,8 @@ int assign(){
  if(d1.sym->type != VAR && d1.sym->type != UNDEF){
   execerror("assignment to non-variable", d1.sym->name);
  }
+ d1.sym->u.val = d2.val;
+ d1.sym->type = VAR;
  return 1;
 }
 

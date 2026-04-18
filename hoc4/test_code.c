@@ -29,16 +29,21 @@ int main(){
 
  printf("testing code\n");
  printf("print: %p\n", print);
- 
+
  initcode();
 
- struct Symbol *s = install("", NUMBER, 42);
-
- code(constpush);
- code((Inst) s);
- code(negate);
- code(print);
- code(STOP);
+struct Symbol *v = install("", NUMBER, 42);
+struct Symbol *s = install("abc", UNDEF, 0.0);
+code(constpush);
+code((Inst) v);
+code(varpush);
+code((Inst) s);
+code(assign);
+/*code(popstack);*/
+code(varpush);
+code((Inst) s);
+code(eval);
+code(print);
  
  printprog();
 
