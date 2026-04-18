@@ -1,5 +1,11 @@
 #include <stdio.h>
 #include <ctype.h>
+/*
+NOTE
+because lexer.c requires hoc.tab.h and hoc.tab.h requires hoc.h
+if hoc.h is not included above hoc.tab.h there will be an
+error in the union statement in hoc.y
+*/
 #include "hoc.h"
 #include "hoc.tab.h"
 extern int lineno;
