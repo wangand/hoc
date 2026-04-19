@@ -29,7 +29,7 @@ extern Inst *code(Inst f);
 %%
 list: /* nothing*/
  | list '\n'
- | list asgn '\n' { code2(popstack, STOP); return 1; }
+ | list asgn '\n' { code(STOP); return 1; }
  | list expr '\n' { code2(print, STOP); return 1; }
  | list error '\n' { yyerrok; }
 ;

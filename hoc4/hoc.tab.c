@@ -1355,7 +1355,7 @@ yyreduce:
     {
         case 4:
 #line 32 "hoc.y"
-    { code2(popstack, STOP); return 1; ;}
+    { code(STOP); return 1; ;}
     break;
 
   case 5:
