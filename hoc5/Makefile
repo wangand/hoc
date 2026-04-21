@@ -54,3 +54,12 @@ test_code: test_code.o init.o math.o execerror.o symbol.o code.o
 run_test_code: test_code
 	./test_code
 
+test_grammar.tab.c: test_grammar.y
+	bison -d test_grammar.y -o test_grammar.tab.c
+test_grammar.o: test_grammar.tab.c
+	gcc -c test_grammar.tab.c -o test_grammar.o
+test_grammar: test_grammar.o lexer.o execerror.o symbol.o init.o math.o code.o
+	gcc test_grammar.o lexer.o execerror.o symbol.o init.o math.o code.o -o test_grammar
+run_test_grammar: test_grammar
+	./test_grammar
+
