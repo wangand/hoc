@@ -20,7 +20,7 @@ extern Inst *code(Inst f);
  Inst *inst;
 }
 %token <sym> NUMBER PRINT VAR BLTIN UNDEF WHILE IF ELSE
-%type <inst> expr
+%type <inst> stmt asgn expr if
 %right '='
 %left OR
 %left AND
@@ -32,10 +32,22 @@ extern Inst *code(Inst f);
 %%
 list: /* nothing*/
  | list '\n'
+ | list asgn '\n' { code(STOP); return 1; }
+ | list stmt '\n' { code(STOP); return 1; }
  | list expr '\n' { code2(print, STOP); return 1; }
  | list error '\n' { yyerrok; }
 ;
+asgn: VAR '=' expr { $$=$3; code3(varpush,(Inst)$1,assign); }
+;
+stmt: PRINT expr {code(prexpr); $$=$2;}
+ | if cond
+;
+cond: '(' expr ')' {printf("cond\n");}
+;
+if: IF { printf("IF\n"); }
+;
 expr: NUMBER { $$ = code2(constpush, (Inst)$1); }
+ | VAR { $$ = code3(varpush, (Inst)$1, eval); }
  | '(' expr ')' { $$ = $2; }
  | expr '+' expr { code(add); }
  | expr '-' expr { code(sub); }
