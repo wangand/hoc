@@ -20,7 +20,7 @@ extern Inst *code(Inst f);
  Inst *inst;
 }
 %token <sym> NUMBER PRINT VAR BLTIN UNDEF WHILE IF ELSE
-%type <inst> stmt asgn expr if
+%type <inst> stmt asgn expr if end
 %right '='
 %left OR
 %left AND
@@ -30,8 +30,8 @@ extern Inst *code(Inst f);
 %left UNARYMINUS NOT
 %right '^'
 %%
-list: /* nothing*/
- | list '\n'
+list: {printf("?start\n");}
+ | list '\n' {printf("?newline\n");}
  | list asgn '\n' { code(STOP); return 1; }
  | list stmt '\n' { code(STOP); return 1; }
  | list expr '\n' { code2(print, STOP); return 1; }
@@ -39,17 +39,20 @@ list: /* nothing*/
 ;
 asgn: VAR '=' expr { $$=$3; code3(varpush,(Inst)$1,assign); }
 ;
-stmt: PRINT expr {code(prexpr); $$=$2;}
- | if cond
+stmt: expr {printf("expr in stmt\n");}
+ | PRINT expr {code(prexpr); $$=$2;}
+ | if cond stmt end
 ;
 cond: '(' expr ')' {printf("cond\n");}
 ;
 if: IF { printf("IF\n"); }
 ;
+end: { printf("?end\n"); }
+;
 expr: NUMBER { $$ = code2(constpush, (Inst)$1); }
  | VAR { $$ = code3(varpush, (Inst)$1, eval); }
- | '(' expr ')' { $$ = $2; }
- | expr '+' expr { code(add); }
+ | '(' expr ')' { $$ = $2; printf("?parens\n");}
+ | expr '+' expr end { code(add); }
  | expr '-' expr { code(sub); }
  | expr '*' expr { code(mul); }
  | expr '/' expr { code(hocdiv); }

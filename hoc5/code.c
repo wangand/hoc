@@ -87,7 +87,7 @@ int ifcode(){
   execute(*((Inst **)(savepc)));
  }
  else if (*((Inst **)(savepc+1))){ /* else part? */
- 
+  execute(*((Inst **)(savepc+1))); 
  }
  pc = *((Inst **)(savepc+2)); /* next stmt */
  return 1;
