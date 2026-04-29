@@ -49,7 +49,7 @@ stmt: expr { /*code(popstack);*/ }
  ($1)[1] = (Inst)$3; /* thenpart */
  ($1)[3] = (Inst)$4; /* end, if cond fails */
 }
- | if cond stmt end ELSE stmt end{ printf("?else\n");
+ | if cond stmt end ELSE stmt end{
  ($1)[1] = (Inst)$3; /* thenpart */
  ($1)[2] = (Inst)$6; /* elsepart */
  ($1)[3] = (Inst)$7; /* end, if cond fails */

@@ -1499,7 +1499,7 @@ yyreduce:
 
   case 13:
 #line 52 "hoc.y"
-    { printf("?else\n");
+    {
  ((yyvsp[(1) - (7)].inst))[1] = (Inst)(yyvsp[(3) - (7)].inst); /* thenpart */
  ((yyvsp[(1) - (7)].inst))[2] = (Inst)(yyvsp[(6) - (7)].inst); /* elsepart */
  ((yyvsp[(1) - (7)].inst))[3] = (Inst)(yyvsp[(7) - (7)].inst); /* end, if cond fails */

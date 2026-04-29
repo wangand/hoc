@@ -28,7 +28,6 @@ int main(){
  jmptest = 1;
 
  printf("testing code\n");
- printf("print: %p\n", print);
 
  initcode();
 
@@ -39,13 +38,12 @@ code((Inst) v);
 code(varpush);
 code((Inst) s);
 code(assign);
-/*code(popstack);*/
 code(varpush);
 code((Inst) s);
 code(eval);
 code(print);
- 
- printprog();
+
+/*printprog();*/
 
  execute(prog);
 }
