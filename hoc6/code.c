@@ -11,6 +11,21 @@ static Datum *stackp;
 Inst prog[NPROG];
 Inst *progp; /* next free spot for code generation */
 Inst *pc; /* program counter */
+Inst *progbase = prog; /* start of current subprogram */
+int returning; /* 1 if return stmt seen */
+
+typedef struct Frame{ /* proc/func call stack frame */
+ Symbol *sp; /* symbol table entry */
+ Inst *retpc; /* symbol table entry */
+ Datum *argn; /* n-th argument on stack */
+ int nargs; /* number of arguments */
+} Frame;
+
+#define NFRAME 100
+Frame frame[NFRAME];
+Frame *fp; /* frame pointer */
+
+void execute(Inst *p);
 
 void initcode(){
  stackp = stack;
@@ -29,23 +44,6 @@ Datum pop(){
   execerror("stack underflow", (char *)0);
  }
  return *--stackp;
-}
-
-Inst *code(Inst f){
- Inst *oprogp = progp;
- if(progp >= &prog[NPROG]){
-  execerror("program too big", (char *)0);
- }
- *progp++ = f;
- return oprogp;
-}
-
-void execute(Inst *p){
- for(pc=p; *pc != STOP; ){
-  (*(*pc++))();
-  /* same effect: */
-  /* (*pc++)(); */
- }
 }
 
 int constpush(){
@@ -70,10 +68,15 @@ int whilecode(){
  d = pop();
  while(d.val){
   execute(*((Inst **)(savepc))); /* body */
+  if(returning){
+   break;
+  }
   execute(savepc+2);
   d = pop();
  }
- pc = *((Inst **)(savepc+1)); /* next statement */
+ if(!returning){
+  pc = *((Inst **)(savepc+1)); /* next statement */
+ }
  return 1;
 }
 
@@ -89,15 +92,82 @@ int ifcode(){
  else if (*((Inst **)(savepc+1))){ /* else part? */
   execute(*((Inst **)(savepc+1))); 
  }
- pc = *((Inst **)(savepc+2)); /* next stmt */
+ if(!returning){
+  pc = *((Inst **)(savepc+2)); /* next stmt */
+ }
  return 1;
 }
 
-int prexpr(){
+void define(Symbol *sp){
+ sp->u.defn = (Inst)progbase; /* start of code */
+ progbase = progp; /* next code starts here */
+}
+
+int call(){ /* call a function */
+ Symbol *sp = (Symbol *)pc[0]; /* symbol table entry */
+ if(fp++ >= &frame[NFRAME-1]){
+  execerror(sp->name, "call nested too deeply");
+ }
+ fp->sp = sp;
+ fp->nargs = (int)pc[1];
+ fp->retpc = pc + 2;
+ fp->argn = stackp - 1; /* last argument */
+ execute(sp->u.defn);
+ returning = 0;
+ return 1;
+}
+
+int ret(){ /* common return from func or proc */
+ int i;
+ for(i=0; i<fp->nargs; i++){
+  pop();
+ }
+ pc = (Inst *)fp->retpc;
+ --fp;
+ returning = 1;
+ return 1;
+}
+
+int funcret(){
+ Datum d;
+ if(fp->sp->type == PROCEDURE){
+  execerror(fp->sp->name, "(proc) returns value");
+ }
+ d = pop();
+ ret();
+ push(d);
+ return 1;
+}
+
+int procret(){
+ if(fp->sp->type == FUNCTION){
+  execerror(fp->sp->name, "(func) returns no value");
+ }
+ ret();
+ return 1;
+}
+
+double *getarg(){ /* return from a procedure */
+ int nargs = (int) *pc++;
+ if(nargs > fp->nargs){
+  execerror(fp->sp->name, "not enough arguments");
+ }
+ return &fp->argn[nargs - fp->nargs].val;
+}
+
+int arg(){ /* push argument onto stack */
+ Datum d;
+ d.val = *getarg();
+ push(d);
+ return 1;
+}
+
+int argassign(){ /* store top of stack in argument */
  Datum d;
  d = pop();
- printf("%.8g\n", d.val);
- return 1;
+ push(d); /* leave value on stack */
+ *getarg() = d.val;
+ return 1; 
 }
 
 int bltin(){
@@ -274,8 +344,59 @@ int print(){
  return 1;
 }
 
+int prexpr(){ /* print numeric value */
+ Datum d;
+ d = pop();
+ printf("%.8g\n", d.val);
+ return 1;
+}
+
+int prstr(){ /* print string value */
+ printf("%s", (char *) *pc++);
+ return 1;
+}
+
+int varread(){ /* read into variable */
+ Datum d;
+ Symbol *var = (Symbol *) *pc++;
+Again:
+ switch(fscanf(stdin, "%lf", &var->u.val)){
+  case EOF:
+   if(moreinput()){
+    goto Again;
+   }
+   d.val = var->u.val = 0.0;
+   break;
+  case 0:
+   execerror("non-number read into", var->name);
+   break;
+  default:
+   d.val = 1.0;
+   break;
+ }
+ var->type = VAR;
+ push(d);
+ return 1;
+}
+
+Inst *code(Inst f){
+ Inst *oprogp = progp;
+ if(progp >= &prog[NPROG]){
+  execerror("program too big", (char *)0);
+ }
+ *progp++ = f;
+ return oprogp;
+}
+
+void execute(Inst *p){
+ for(pc=p; *pc != STOP; ){
+  (*(*pc++))();
+  /* same effect: */
+  /* (*pc++)(); */
+ }
+}
+
 int popstack(){
  pop();
  return 1;
 }
-

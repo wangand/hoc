@@ -38,7 +38,10 @@ struct HocKeywords{
  char *name;
  int kval;
 };
-static struct HocKeywords keywords[5] = {
+static struct HocKeywords keywords[8] = {
+ { "proc", PROC },
+ { "func", FUNC },
+ { "return", RETURN },
  { "if", IF },
  { "else", ELSE },
  { "while", WHILE },
