@@ -29,8 +29,10 @@ Frame *fp; /* frame pointer */
 void execute(Inst *p);
 
 void initcode(){
+ progp = progbase;
  stackp = stack;
- progp = prog;
+ fp = frame;
+ returning = 0;
 }
 
 void push(Datum d){
