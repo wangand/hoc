@@ -1,8 +1,8 @@
 run: hoc
 	./hoc
 
-hoc: hoc.tab.o lexer.o execerror.o symbol.o init.o math.o code.o
-	gcc hoc.tab.o lexer.o execerror.o symbol.o init.o math.o code.o -o hoc
+hoc: hoc.tab.o lexer.o execerror.o symbol.o init.o math.o code.o moreinput.o
+	gcc hoc.tab.o lexer.o execerror.o symbol.o init.o math.o code.o moreinput.o -o hoc
 
 lexer.o: lexer.c hoc.tab.o
 	gcc -c lexer.c -o lexer.o
@@ -24,7 +24,8 @@ init.o: init.c
 	gcc -c init.c -o init.o
 code.o: code.c
 	gcc -c code.c -o code.o
-
+moreinput.o: moreinput.c
+	gcc -c moreinput.c -o moreinput.o
 
 test_symbol.o: test_symbol.c hoc.tab.h
 	gcc -c test_symbol.c -o test_symbol.o 
@@ -49,8 +50,8 @@ run_test_lexer: test_lexer
 
 test_code.o: test_code.c
 	gcc -c test_code.c -o test_code.o
-test_code: test_code.o init.o math.o execerror.o symbol.o code.o
-	gcc test_code.o init.o math.o execerror.o symbol.o code.o -o test_code
+test_code: test_code.o init.o math.o execerror.o symbol.o code.o moreinput.o
+	gcc test_code.o init.o math.o execerror.o symbol.o code.o moreinput.o -o test_code
 run_test_code: test_code
 	./test_code
 

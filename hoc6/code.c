@@ -2,6 +2,7 @@
 #include "hoc.h"
 #include "hoc.tab.h"
 extern double Pow(double, double);
+extern int moreinput();
 
 #define NSTACK 256
 static Datum stack[NSTACK];

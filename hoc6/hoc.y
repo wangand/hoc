@@ -99,6 +99,11 @@ expr: NUMBER { $$ = code2(constpush, (Inst)$1); }
 #include <ctype.h>
 char *progname ; /* for error messages */
 int lineno = 1;
+int indef;
+char *infile; /* input file name */
+FILE *fin; /* input file pointer */
+char **gargv; /* global argument list */
+int gargc;
 extern void init();
 extern void initcode();
 extern void execute(Inst *p);

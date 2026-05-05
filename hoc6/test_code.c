@@ -1,7 +1,16 @@
 #include <stdio.h>
 #include <setjmp.h>
+#include <stdio.h>
 #include "hoc.h"
 #include "hoc.tab.h"
+
+char *progname;
+int lineno;
+char *infile;
+FILE *fin;
+char **gargv;
+int gargc;
+
 
 jmp_buf begin;
 extern void init();
@@ -10,6 +19,7 @@ extern void execute(Inst *p);
 extern Inst *code(Inst f);
 extern Inst *pc;
 extern void push(Datum d);
+extern int moreinput();
 
 void printprog(){
  for(Inst *p=prog; *p != STOP; p++){
