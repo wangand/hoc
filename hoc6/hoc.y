@@ -107,16 +107,35 @@ int gargc;
 extern void init();
 extern void initcode();
 extern void execute(Inst *p);
+extern int moreinput();
+void run();
 
 int main(int argc, char *argv[]) {
+ int i;
+ 
  progname = argv[0];
+ if(argc==1){
+  static char *stdinonly[] = { "-" };
+  gargv = stdinonly;
+  gargc = 1;
+ }
+ else{
+  gargv = argv+1;
+  gargc = argc-1;
+ }
  init();
+ while(moreinput()){
+  run();
+ }
+ return 0;
+}
+
+void run(){
  setjmp(begin);
  signal(SIGFPE, fpecatch);
  for(initcode(); yyparse(); initcode()){
-  execute(prog);
+  execute(progbase);
  }
- return 0;
 }
 
 int yyerror(char* s){
