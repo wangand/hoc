@@ -100,7 +100,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 18 "hoc.y"
+#line 21 "hoc.y"
 {
  struct Symbol *sym;
  Inst *inst;
