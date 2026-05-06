@@ -59,7 +59,7 @@ stmt: expr { /*code(popstack);*/ }
  | PROCEDURE begin '(' arglist ')' {
  $$ = $2; code3(call, (Inst)$1, (Inst)$4);
 }
- | PRINT expr { code(prexpr); $$ = $2; }
+ | PRINT prlist { $$ = $2; }
  | while cond stmt end {
  ($1)[1] = (Inst)$3; /* body of loop */
  ($1)[2] = (Inst)$4 ;/* end, if cond fails */
