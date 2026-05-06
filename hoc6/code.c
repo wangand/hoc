@@ -392,7 +392,7 @@ Inst *code(Inst f){
 }
 
 void execute(Inst *p){
- for(pc=p; *pc != STOP; ){
+ for(pc=p; *pc != STOP && !returning; ){
   (*(*pc++))();
   /* same effect: */
   /* (*pc++)(); */
